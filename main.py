@@ -11,7 +11,8 @@ from flask import Flask, request, jsonify
 import nest_asyncio
 nest_asyncio.apply()
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Bot
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from telegram.constants import ParseMode
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -205,3 +206,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
