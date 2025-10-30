@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 # ENV variables (set these in Render / Railway)
 BOT_TOKEN = os.environ.get("8492768661:AAGV1CGNW38yo3DEZGKjYU3vBC0VebstpJk")
-API_KEY = os.environ.get("LGQ55GeAnH123czaYPA9KNkzvQ80TcZh8PzQ")
+API_KEY = os.environ.get("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiTnpZek16VT0iLCJ0eXBlIjoicHJvamVjdCIsInYiOiJjMzYzOWRlZTQwMWQ4YmNjNzU1M2VjYTAyNDE4MTEyYjNlMTcwNDRiMmZmMGEzOTg1OTI3OGIxMTA4ZDBlZDlhIiwiZXhwIjo4ODE2MTY2Mjc4M30.C-EqFghhnxT3xnkR0igMDJmJkso4UNMUbm-OpWzuDXM")
 BASE_URL = os.environ.get("https://durchatabot.onrender.com")  # e.g. https://your-app.onrender.com
 
 if not BOT_TOKEN or not API_KEY or not BASE_URL:
@@ -206,4 +206,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
