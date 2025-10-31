@@ -49,25 +49,41 @@ def create_invoice(amount_usdt, description, chat_id):
     }
     data = {
         "shop_id": SHOP_ID,
-        "amount": amount_usdt,
-        "currency": "USDT",
-        "order_id": str(uuid.uuid4()),
+        "amount": str(amount_usdt),       # must be string per API spec
+        "currency": "USDT",               # stablecoin used for payment
+        "order_id": str(uuid.uuid4()),    # unique order identifier
         "description": description,
-        "lifetime": 1800,
-        "callback_url": f"{BASE_URL}/cryptocloud/webhook"
+        "lifetime": 1800,                 # seconds (30 minutes)
+        "callback_url": f"{BASE_URL}/cryptocloud/webhook",
     }
+
     try:
         resp = requests.post(url, headers=headers, json=data, timeout=15)
+        log.info("CryptoCloud response: %s", resp.text)
         resp.raise_for_status()
         res = resp.json()
-        if "result" in res and "url" in res["result"]:
+
+        # successful response example:
+        # { "result": { "id": "...", "url": "https://pay.cryptocloud.plus/invoice/..." } }
+        if res.get("result") and res["result"].get("url"):
             invoice_id = res["result"].get("invoice_id") or res["result"].get("id")
             if invoice_id:
                 user_invoices[str(invoice_id)] = chat_id
             return res["result"]["url"]
+
+        log.error("Unexpected response from CryptoCloud: %s", res)
+        return None
+
+    except requests.exceptions.HTTPError as e:
+        if resp.status_code == 401:
+            log.error("❌ Unauthorized — invalid API key.")
+        elif resp.status_code == 403:
+            log.error("❌ Forbidden — check SHOP_ID or API key permissions.")
+        elif resp.status_code == 404:
+            log.error("❌ Endpoint not found. Check API version (should be /v3/invoice-create).")
         else:
-            log.error("Invoice create error: %s", res)
-            return None
+            log.error("❌ HTTP error: %s", e)
+        return None
     except Exception as e:
         log.exception("Failed to create invoice: %s", e)
         return None
@@ -213,6 +229,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
