@@ -41,7 +41,7 @@ user_invoices = {}
 
 # Create invoice function using CryptoCloud
 def create_invoice(amount_usdt, description, chat_id):
-    url = "https://api.cryptocloud.plus/v1/invoice-create"
+    url = "https://api.cryptocloud.plus/v2/invoice-create"
     headers = {"Authorization": f"Token {API_KEY}"}
     data = {
         "amount": amount_usdt,
@@ -207,6 +207,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
