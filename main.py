@@ -27,6 +27,7 @@ log = logging.getLogger(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 API_KEY = os.environ.get("CRYPTOCLOUD_API_KEY")
 BASE_URL = os.environ.get("BASE_URL")
+SHOP_ID = os.environ.get("SHOP_ID")
 
 
 if not BOT_TOKEN or not API_KEY or not BASE_URL:
@@ -42,8 +43,12 @@ user_invoices = {}
 # Create invoice function using CryptoCloud
 def create_invoice(amount_usdt, description, chat_id):
     url = "https://api.cryptocloud.plus/v3/invoice-create"
-    headers = {"Authorization": f"Token {API_KEY}"}
+    headers = {
+        "Authorization": f"Token {API_KEY}",
+        "Content-Type": "application/json",
+    }
     data = {
+        "shop_id": SHOP_ID,
         "amount": amount_usdt,
         "currency": "USDT",
         "order_id": str(uuid.uuid4()),
@@ -66,6 +71,7 @@ def create_invoice(amount_usdt, description, chat_id):
     except Exception as e:
         log.exception("Failed to create invoice: %s", e)
         return None
+
 
 # Telegram handlers
 async def start(update, context: ContextTypes.DEFAULT_TYPE):
@@ -207,6 +213,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
